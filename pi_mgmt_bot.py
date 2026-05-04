@@ -111,6 +111,19 @@ def get_cpu(message):
     else:
         pass
 
+# Reboot the device
+@bot.message_handler(commands=['reboot'])
+def reboot_device(message):
+    if UserCheck(message) == True:
+        bot.send_message(message.chat.id, "Rebooting device...")
+        try:
+            subprocess.run(['sudo', 'reboot'], check=True)
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            bot.send_message(message.chat.id, f"Error rebooting device: {e}")
+    else:
+        pass
+
 # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
 @bot.message_handler(func=lambda message: True)
 def echo_message(message):
