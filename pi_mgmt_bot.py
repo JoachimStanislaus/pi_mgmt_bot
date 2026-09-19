@@ -13,7 +13,7 @@ load_dotenv()
 base_tele_ids = os.getenv("BASE_TELE_USER_ID")
 
 bot = telebot.TeleBot(os.getenv("TELE_API_KEY"))
-TelegramUsers = json.loads(base_tele_ids) if base_tele_ids else []
+TelegramUsers = [json.loads(base_tele_ids)] if base_tele_ids else []
 
 #Get today's date in integer format
 def today_date():
@@ -110,11 +110,6 @@ def get_cpu(message):
         bot.send_message(message.chat.id, f"CPU Usage: {my_cpu}%")
     else:
         pass
-
-# Handle all other messages with content_type 'text' (content_types defaults to ['text'])
-@bot.message_handler(func=lambda message: True)
-def echo_message(message):
-    bot.reply_to(message, "out of first loop")
 
 print("I'm listening...")
 bot.infinity_polling()
