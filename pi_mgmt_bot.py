@@ -13,7 +13,7 @@ load_dotenv()
 base_tele_ids = os.getenv("BASE_TELE_USER_ID")
 
 bot = telebot.TeleBot(os.getenv("TELE_API_KEY"))
-TelegramUsers = [json.loads(base_tele_ids)] if base_tele_ids else []
+TelegramUsers = json.loads(base_tele_ids) if base_tele_ids else []
 
 #Get today's date in integer format
 def today_date():
