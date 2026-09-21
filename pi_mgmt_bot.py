@@ -117,7 +117,10 @@ def reboot_device(message):
     if UserCheck(message) == True:
         bot.send_message(message.chat.id, "Rebooting device...")
         try:
-            subprocess.run(['sudo', 'reboot'], check=True)
+            subprocess.run(
+                ['sudo', '-n', '/usr/sbin/reboot'],
+                check=True
+            )
         except Exception as e:
             print(f"Error occurred: {e}")
             bot.send_message(message.chat.id, f"Error rebooting device: {e}")
