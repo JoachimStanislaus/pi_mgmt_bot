@@ -14,6 +14,8 @@ base_tele_ids = os.getenv("BASE_TELE_USER_ID")
 
 bot = telebot.TeleBot(os.getenv("TELE_API_KEY"))
 TelegramUsers = json.loads(base_tele_ids) if base_tele_ids else []
+PROJECT_DIR = "/home/joachim/Desktop/pi_mgmt_bot"
+SERVICE_NAME = "pi_finance_assistant.service"
 
 #Get today's date in integer format
 def today_date():
@@ -124,6 +126,25 @@ def reboot_device(message):
         except Exception as e:
             print(f"Error occurred: {e}")
             bot.send_message(message.chat.id, f"Error rebooting device: {e}")
+    else:
+        pass
+
+@bot.message_handler(commands=['redeploy'])
+def redeploy_bot(message):
+    if UserCheck(message) == True:
+        bot.send_message(message.chat.id, "Redeploying bot...")
+        try:
+            subprocess.run(
+                ["git", "pull"],
+                cwd=PROJECT_DIR,
+                check=True
+            )
+            subprocess.run(
+                ["sudo", "systemctl", "restart", SERVICE_NAME],
+                check=True
+            )
+        except Exception as e:
+            bot.send_message(message.chat.id, f"Error redeploying bot: {e}")
     else:
         pass
 
