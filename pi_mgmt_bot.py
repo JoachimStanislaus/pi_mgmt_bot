@@ -15,6 +15,7 @@ base_tele_ids = os.getenv("BASE_TELE_USER_ID")
 bot = telebot.TeleBot(os.getenv("TELE_API_KEY"))
 TelegramUsers = json.loads(base_tele_ids) if base_tele_ids else []
 PROJECT_DIR = "/home/joachim/Desktop/pi_mgmt_bot"
+FINANCE_PROJECT_DIR = "/home/joachim/Desktop/pi_finance_assistant"
 SERVICE_NAME = "pi_finance_assistant.service"
 
 #Get today's date in integer format
@@ -147,6 +148,29 @@ def redeploy_bot(message):
             bot.send_message(message.chat.id, f"Error redeploying bot: {e}")
     else:
         pass
+
+@bot.message_handler(commands=['git_pull'])
+def git_pull(message):
+    """
+    Pulls the latest changes from the Git repository.
+
+    Returns:
+        True if successful, False otherwise.
+    """
+    try:
+        subprocess.run(
+            ["git", "pull"],
+            cwd=FINANCE_PROJECT_DIR,
+            check=True
+        )
+        bot.send_message(message.chat.id, "Git pull successful!")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        bot.send_message(message.chat.id, f"Git pull failed: {e}")
+        return False
+
+
 
 # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
 @bot.message_handler(func=lambda message: True)
